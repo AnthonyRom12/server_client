@@ -1,0 +1,30 @@
+all:server client
+
+server_src += \
+    server.c
+
+server_obj := $(patsubst %.c, %.o, $(server_src))
+
+client_src += \
+    client.c
+
+client_obj:= $(patsubst %.c, %.o, $(client_src))
+
+CC := clang
+
+CFLAGS += -Wall -fPIC
+
+server:$(server_obj)
+    $(CC) -o $@ $^ -lev
+%.o:%.c
+    $(CC) -o $@ -c $< $(CFLAGS)
+
+client:$(client_obj)
+    $(CC) -o $@ $^ -lpthread
+%.o:%.c
+    $(CC) -o $@ -c $< $(CFLAGS)
+
+.PHONY:clean all
+
+clean:
+    @rm -rf server client *.o
